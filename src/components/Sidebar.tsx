@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -48,15 +49,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Auth Buttons */}
           <div className="space-y-3 mb-6">
             <Button 
+              asChild
               className="w-full bg-gradient-primary hover:opacity-90 button-glow card-float"
             >
-              Sign Up
+              <Link to="/signup">Sign Up</Link>
             </Button>
             <Button 
+              asChild
               variant="outline" 
               className="w-full hover:bg-accent card-float"
             >
-              Login
+              <Link to="/login">Login</Link>
             </Button>
           </div>
 
@@ -67,7 +70,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               Recent Activity
             </h3>
             
-            <ScrollArea className="h-[400px]">
+            <ScrollArea className="h-[300px]">
               <div className="space-y-3">
                 {userHistory.map((item) => (
                   <Card key={item.id} className="bg-gradient-card card-float cursor-pointer">
@@ -93,24 +96,29 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
 
           {/* User Profile Card */}
-          <Card className="bg-gradient-card card-float mt-6">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center">
-                  <User size={20} className="text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-foreground truncate">Alex Johnson</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="secondary" className="text-xs bg-gradient-secondary text-white">
-                      <Crown size={12} className="mr-1" />
-                      Pro Plan
-                    </Badge>
+          <div className="mt-6">
+            <Card className="bg-gradient-card card-float border border-border/50">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center flex-shrink-0">
+                    <User size={24} className="text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-foreground text-sm">Alex Johnson</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge 
+                        variant="secondary" 
+                        className="text-xs bg-gradient-secondary text-white border-0 px-2 py-1"
+                      >
+                        <Crown size={12} className="mr-1" />
+                        Pro Plan
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </aside>
     </>
