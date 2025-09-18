@@ -9,6 +9,8 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: ""
   });
@@ -18,7 +20,16 @@ export default function Login() {
     e.preventDefault();
     // Simulate login
     console.log("Login attempt:", formData);
-    // Navigate back to home after successful login
+    try {
+      localStorage.setItem(
+        "liora_user",
+        JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email
+        })
+      );
+    } catch {}
     navigate("/");
   };
 
@@ -38,15 +49,44 @@ export default function Login() {
         {/* Login Card */}
         <Card className="bg-gradient-card card-float border-border/50">
           <CardHeader className="text-center space-y-2">
-            <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-2xl">L</span>
-            </div>
+            {/* Liora Logo */}
+            <img
+              src="/image-removebg-preview.png"  // 🔑 Ensure this is in /public
+              alt="Liora Logo"
+              className="w-16 h-16 object-contain mx-auto mb-4"
+            />
             <CardTitle className="text-2xl gradient-text">Welcome Back</CardTitle>
             <p className="text-muted-foreground">Sign in to continue your career journey</p>
           </CardHeader>
           
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Name Fields */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    placeholder="Alex"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                    required
+                    className="bg-background/50"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    placeholder="Johnson"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                    required
+                    className="bg-background/50"
+                  />
+                </div>
+              </div>
+
               {/* Email Field */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>

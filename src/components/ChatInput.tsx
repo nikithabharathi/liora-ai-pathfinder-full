@@ -93,8 +93,8 @@ export function ChatInput() {
                 }`}
               >
                 {!msg.isUser && (
-                  <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0">
-                    <Bot size={16} className="text-white" />
+                  <div>
+                    <img className="w-8 h-8" src="/image-removebg-preview.png" />
                   </div>
                 )}
                 

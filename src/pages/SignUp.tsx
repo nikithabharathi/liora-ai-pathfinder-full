@@ -20,9 +20,7 @@ export default function SignUp() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate signup
     console.log("Signup attempt:", formData);
-    // Navigate back to home after successful signup
     navigate("/");
   };
 
@@ -42,9 +40,15 @@ export default function SignUp() {
         {/* Signup Card */}
         <Card className="bg-gradient-card card-float border-border/50">
           <CardHeader className="text-center space-y-2">
-            <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-2xl">L</span>
+            {/* Logo */}
+            <div className="w-20 h-20 mx-auto mb-4">
+              <img 
+                src="/image-removebg-preview.png" 
+                alt="Liora Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
+
             <CardTitle className="text-2xl gradient-text">Join Liora</CardTitle>
             <p className="text-muted-foreground">Start your AI-powered career journey today</p>
           </CardHeader>
