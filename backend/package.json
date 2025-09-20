@@ -1,0 +1,35 @@
+{
+  "name": "fullstack-llm-project",
+  "version": "1.0.0",
+  "description": "Fullstack project with frontend (Vite) and backend (Express) for LLM integration",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev-frontend": "vite",
+    "dev-backend": "nodemon server.js",
+    "dev": "concurrently \"npm run dev-frontend\" \"npm run dev-backend\"",
+    "start": "node server.js",
+    "build": "vite build"
+  },
+  "keywords": [
+    "backend",
+    "frontend",
+    "express",
+    "vite",
+    "llm",
+    "huggingface"
+  ],
+  "author": "Nikithabharathi",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "openai": "^4.104.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.2",
+    "vite": "^5.5.2"
+  }
+}
