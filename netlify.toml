@@ -1,0 +1,6 @@
+[build]
+  publish = "."           # publish the root folder since frontend is here
+  functions = "functions"
+
+[dev]
+  functions = "functions"

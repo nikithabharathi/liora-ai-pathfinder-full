@@ -10,16 +10,20 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-// Relaxed CORS for local dev (localhost / 127.0.0.1)
+// CORS setup for local + deployed frontend
+const allowedOrigins = [
+  /^http:\/\/localhost:(\d{4,5})$/,
+  /^http:\/\/127\.0\.0\.1:(\d{4,5})$/,
+  "https://lioraaipathfinder.netlify.app/" // <-- replace with your deployed frontend URL
+];
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      const allowed = [
-        /^http:\/\/localhost:(\d{4,5})$/,
-        /^http:\/\/127\.0\.0\.1:(\d{4,5})$/,
-      ];
-      const ok = allowed.some((re) => re.test(origin));
+      if (!origin) return callback(null, true); // allow server-to-server or Postman
+      const ok = allowedOrigins.some((re) =>
+        typeof re === "string" ? re === origin : re.test(origin)
+      );
       callback(ok ? null : new Error("CORS not allowed"), ok);
     },
     methods: ["GET", "POST", "OPTIONS"],
@@ -37,7 +41,7 @@ const client = new OpenAI({
   apiKey: process.env.HF_TOKEN,
 });
 
-// Use Together provider model
+// Model
 const SELECTED_MODEL = "meta-llama/Meta-Llama-3-70B-Instruct:together";
 console.log("Using HF model:", SELECTED_MODEL);
 
@@ -46,9 +50,7 @@ app.post("/api/generate", async (req, res) => {
   try {
     const { prompt } = req.body;
 
-    if (!prompt) {
-      return res.status(400).json({ error: "Prompt is required" });
-    }
+    if (!prompt) return res.status(400).json({ error: "Prompt is required" });
 
     console.log("/api/generate called", {
       promptPreview: String(prompt).slice(0, 80),
@@ -71,16 +73,18 @@ app.post("/api/generate", async (req, res) => {
       if (!reply) console.warn("Router returned no choices or empty content");
       return res.json({ reply });
     } catch (primaryError) {
-      console.error("Primary chat completion failed:", primaryError.message);
+      console.error("Primary chat completion failed", {
+        message: primaryError.message,
+        status: primaryError?.status,
+        data: primaryError?.response?.data,
+      });
       return res
         .status(500)
         .json({ error: "Failed to generate response", details: primaryError.message });
     }
   } catch (error) {
-    console.error("LLM Error:", error);
-    res
-      .status(500)
-      .json({ error: "Server error", details: error.message });
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Server error", details: error.message });
   }
 });
 

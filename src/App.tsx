@@ -1,30 +1,50 @@
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Chat from "./pages/Chat";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import NotFound from "./pages/NotFound";
+import { useState } from "react";
 
-const queryClient = new QueryClient();
+const Chat = () => {
+  const [userPrompt, setUserPrompt] = useState("");
+  const [reply, setReply] = useState("");
+  const [loading, setLoading] = useState(false);
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  const handleSubmit = async () => {
+    if (!userPrompt) return;
+    setLoading(true);
 
-export default App;
+    try {
+      const response = await fetch("/.netlify/functions/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: userPrompt }),
+      });
+
+      const data = await response.json();
+      setReply(data.reply);
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+      setReply("Failed to get response from AI.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <h1>AI Career & Skills Advisor</h1>
+      <textarea
+        value={userPrompt}
+        onChange={(e) => setUserPrompt(e.target.value)}
+        placeholder="Enter your career question..."
+      />
+      <button onClick={handleSubmit} disabled={loading}>
+        {loading ? "Thinking..." : "Ask AI"}
+      </button>
+      {reply && (
+        <div>
+          <h2>AI Response:</h2>
+          <p>{reply}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Chat;
